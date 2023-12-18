@@ -10,7 +10,9 @@ echo "The Jenkins Hom directory is: ${JENKINS_HOME}"
 
 def mavenHome = tool name: "maven3.9.6"
 
-try{ 
+try{
+ sendSlackNotifications("STARTED")
+ 
 stage('CheckoutCode'){
 git branch: 'development', credentialsId: '84f6d941-e038-44ed-80d9-8a4f3bede4dd', url: 'https://github.com/bankingapps1/maven-web-application.git'
 }
