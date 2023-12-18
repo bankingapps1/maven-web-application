@@ -10,6 +10,7 @@ echo "The Jenkins Hom directory is: ${JENKINS_HOME}"
 
 def mavenHome = tool name: "maven3.9.6"
 
+try{ 
 stage('CheckoutCode'){
 git branch: 'development', credentialsId: '84f6d941-e038-44ed-80d9-8a4f3bede4dd', url: 'https://github.com/bankingapps1/maven-web-application.git'
 }
@@ -32,5 +33,36 @@ sshagent(['787a60d8-d197-4138-8873-a977c705fe3f']) {
  }
 }
 */
+
+}//try closing
+ catch(e){
+currentBuild.result = "FAILURE"
+}
+finally{
+sendSlackNotifications(currentBuild.result)
+}
+ //Slack Send Notifications
  
+ def send SlackNotifications(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESS'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    colorName = 'ORANGE'
+    colorCode = '#FFA500'
+  } else if (buildStatus == 'SUCCESS') {
+    colorName = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    colorName = 'RED'
+    colorCode = '#FF0000'
+  }
+  
 }
