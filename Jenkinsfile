@@ -33,7 +33,6 @@ sshagent(['787a60d8-d197-4138-8873-a977c705fe3f']) {
  }
 }
 */
-
 }//try closing
  catch(e){
 currentBuild.result = "FAILURE"
@@ -41,7 +40,9 @@ currentBuild.result = "FAILURE"
 finally{
 sendSlackNotifications(currentBuild.result)
 }
- 
+
+}
+
  //Slack Send Notifications
  
  def sendSlackNotifications(String buildStatus = 'STARTED') {
@@ -65,5 +66,7 @@ sendSlackNotifications(currentBuild.result)
     colorName = 'RED'
     colorCode = '#FF0000'
   }
-  
+
+  // Send notifications
+  slackSend (color: colorCode, message: summary)
 }
